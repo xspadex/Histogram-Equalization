@@ -1,4 +1,4 @@
-import cv2
+import cv2 as cv
 import numpy as np
 from math import *
 
@@ -21,8 +21,8 @@ def Grad_func(img):
         for j in range(1, img.shape[1]-1):
             Gij = []
             roi = img[i-1:i+2, j-1:j+2]
-            gx = cv2.Sobel(roi,cv2.CV_64F, 1, 0, ksize = 1)
-            gy = cv2.Sobel(roi, cv2.CV_64F, 0, 1, ksize = 1)
+            gx = cv.Sobel(roi,cv.CV_64F, 1, 0, ksize = 1)
+            gy = cv.Sobel(roi, cv.CV_64F, 0, 1, ksize = 1)
             gx = np.reshape(gx,(9, ))
             gy = np.reshape(gy,(9, ))
             Gij.append(gx)
@@ -95,14 +95,14 @@ def Weighted_Guided_Image_Filter(im, p, r, r2, eps, lamda, N):
     -------
     q : Output Image after WGIF application
     '''
-    mean_I = cv2.boxFilter(im,cv2.CV_64F,(r,r))
-    mean_I2  = cv2.boxFilter(im, cv2.CV_64F,(r2,r2))
-    mean_p = cv2.boxFilter(p, cv2.CV_64F,(r,r))
-    mean_p2 = cv2.boxFilter(p, cv2.CV_64F, (r2,r2))
+    mean_I = cv.boxFilter(im,cv.CV_64F,(r,r))
+    mean_I2  = cv.boxFilter(im, cv.CV_64F,(r2,r2))
+    mean_p = cv.boxFilter(p, cv.CV_64F,(r,r))
+    mean_p2 = cv.boxFilter(p, cv.CV_64F, (r2,r2))
     
-    corr_I = cv2.boxFilter(im*im, cv2.CV_64F,(r,r))
-    corr_I2 = cv2.boxFilter(im*im,cv2.CV_64F,(r2,r2))
-    corr_Ip = cv2.boxFilter(im*p,cv2.CV_64F,(r,r))
+    corr_I = cv.boxFilter(im*im, cv.CV_64F,(r,r))
+    corr_I2 = cv.boxFilter(im*im,cv.CV_64F,(r2,r2))
+    corr_Ip = cv.boxFilter(im*p,cv.CV_64F,(r,r))
     
     var_I = corr_I - mean_I*mean_I
     var_I2 = corr_I2 - mean_I2*mean_I2
@@ -113,8 +113,8 @@ def Weighted_Guided_Image_Filter(im, p, r, r2, eps, lamda, N):
     
     a_psi = cov_Ip/(var_I + eps/PsiI)
     b_psi = mean_p - (a_psi)*mean_I
-    mean_ap = cv2.boxFilter(a_psi,cv2.CV_64F,(r2,r2))
-    mean_bp = cv2.boxFilter(b_psi,cv2.CV_64F,(r2,r2))
+    mean_ap = cv.boxFilter(a_psi,cv.CV_64F,(r2,r2))
+    mean_bp = cv.boxFilter(b_psi,cv.CV_64F,(r2,r2))
     qp = mean_ap*im + mean_bp
     return qp
 
@@ -135,3 +135,39 @@ def get_WGIF(im):
     WGIF = Weighted_Guided_Image_Filter(im, im, r, rd, eps, lamda, N)
     return  WGIF
 
+def wgif_based_enhance(SI):
+    SIL = get_WGIF(SI)
+
+    rows, columns = SIL.shape
+    a = 1 - np.average(SIL)
+    SILG = np.zeros_like(SIL)
+    for i in range(rows):
+        for j in range(columns):
+            phi = (SIL[i][j] + a) / (1 + a)
+            SILG[i][j] = SIL[i][j] ** phi
+
+    SILGf = np.zeros_like(SILG)
+    minimum = np.min(SILG)
+    maximum = np.max(SILG)
+    for i in range(rows):
+        for j in range(columns):
+            SILGf[i][j] = (SILG[i][j] - minimum) / (maximum - minimum)
+
+    SIR = np.zeros_like(SIL)
+    for i in range(rows):
+        for j in range(columns):
+            SIR[i][j] = SI[i][j] / SIL[i][j]
+
+    SIRH = get_WGIF(SIR)
+    SIE = np.zeros_like(SIRH)
+    for i in range(rows):
+        for j in range(columns):
+            SIE[i][j] = SILGf[i][j] * SIRH[i][j]
+
+    b = np.average(SIE)
+    SIEf = np.zeros_like(SIE)
+    for i in range(rows):
+        for j in range(columns):
+            SIEf[i][j] = 1 / (1 + np.exp(-8 * (SIE[i][j] - b)))
+
+    return SIEf

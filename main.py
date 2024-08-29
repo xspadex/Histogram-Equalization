@@ -1,6 +1,12 @@
-from wgif import get_WGIF
-import cv2
-import numpy as np
+import wgif
+import utils
+import basic_he
+
+DRAW_HISTOGRAM = False
+DRAW_PICS = False
+DRAW_3D_MAP = False
+METHOD = ["Histogram_Equalize", "WGIF_Based_Enhance"][0]
+RESTORT_COLOR = True
 
 
 pic_list = [
@@ -15,48 +21,30 @@ pic_list = [
 ]
 
 for pic in pic_list:
+    img = utils.read_img("pics/" + pic)
+    gray_img = utils.RGB_to_gray(img)
+    intensity = utils.RGB_to_intensity(img)
+    if METHOD == "WGIF_Based_Enhance":
+        enhanced_intensity = wgif.wgif_based_enhance(intensity)
+        enhanced_gray_img = utils.intensity_to_gray(enhanced_intensity)
+    elif METHOD == "Histogram_Equalize":
+        enhanced_gray_img = basic_he.histogram_equalize(gray_img)
+        enhanced_intensity = utils.gray_to_intensity(enhanced_gray_img)
+    if DRAW_3D_MAP:
+        utils.draw_2_matrixs_in_one([gray_img, enhanced_gray_img])
+        
+    if DRAW_HISTOGRAM:
+        hist, bins = basic_he.get_histogram(gray_img)
+        new_hist, new_bins = basic_he.get_histogram(enhanced_gray_img)
+        utils.draw_histograms_in_one(hist, bins, new_hist, new_bins)
 
-    img = cv2.imread("./pics/" + pic, 1)
-    bgr = np.float64(img)
+    if RESTORT_COLOR:
+        enhanced_img = utils.restort_color(img, intensity, enhanced_intensity)
+    else:
+        img = gray_img
+        enhanced_img = enhanced_gray_img
 
-    SI = np.divide(bgr[:,:,0] + bgr[:,:,1] + bgr[:,:,2] + 0.001, 3 * 255)
-    SIL = get_WGIF(SI)
-
-    rows, columns = SIL.shape
-    a = 1 - np.average(SIL)
-    SILG = np.zeros_like(SIL)
-    for i in range(rows):
-        for j in range(columns):
-            phi = (SIL[i][j] + a) / (1 + a)
-            SILG[i][j] = SIL[i][j] ** phi
-
-    SILGf = np.zeros_like(SILG)
-    minimum = np.min(SILG)
-    maximum = np.max(SILG)
-    for i in range(rows):
-        for j in range(columns):
-            SILGf[i][j] = (SILG[i][j] - minimum) / (maximum - minimum)
-
-    SIR = np.zeros_like(SIL)
-    for i in range(rows):
-        for j in range(columns):
-            SIR[i][j] = SI[i][j] / SIL[i][j]
-
-    SIRH = get_WGIF(SIR)
-    SIE = np.zeros_like(SIRH)
-    for i in range(rows):
-        for j in range(columns):
-            SIE[i][j] = SILGf[i][j] * SIRH[i][j]
-
-    b = np.average(SIE)
-    SIEf = np.zeros_like(SIE)
-    for i in range(rows):
-        for j in range(columns):
-            SIEf[i][j] = 1 / (1 + np.exp(-8 * (SIE[i][j] - b)))
-
-    for i in range(rows):
-        for j in range(columns):
-            for k in range(3):
-                bgr[i][j][k] = bgr[i][j][k] * SIEf[i][j] / SI[i][j]
-
-    cv2.imwrite("results/" + pic.replace(".jpeg", ".jpg"), bgr)
+    if DRAW_PICS:
+        utils.show_images_concat(img, enhanced_img)
+    
+    utils.write_img("results/" + pic.replace(".jpeg", ".jpg"), enhanced_img)
