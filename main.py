@@ -5,7 +5,7 @@ import basic_he
 DRAW_HISTOGRAM = False
 DRAW_PICS = False
 DRAW_3D_MAP = False
-METHOD = ["Histogram_Equalize", "WGIF_Based_Enhance"][0]
+METHOD = ["Histogram_Equalize", "WGIF_Based_Enhance"][1]
 RESTORT_COLOR = True
 
 
