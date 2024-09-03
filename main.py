@@ -7,7 +7,7 @@ import bhe2pl
 DRAW_HISTOGRAM = False
 DRAW_PICS = False
 DRAW_3D_MAP = False
-METHOD = ["Histogram_Equalize", "WGIF_Based_Enhance", "DPHE", "BHE2PL"][3]
+METHOD = ["Histogram_Equalize", "WGIF_Based_Enhance", "DPHE", "BHE2PL"][1]
 RESTORT_COLOR = True
 
 
