@@ -3,11 +3,14 @@ import utils
 import basic_he
 import dphe
 import bhe2pl
+import BBHE
+import DSIHE
+import MMBEBHE
 
 DRAW_HISTOGRAM = False
 DRAW_PICS = False
 DRAW_3D_MAP = False
-METHOD = ["Histogram_Equalize", "WGIF_Based_Enhance", "DPHE", "BHE2PL"][1]
+METHOD = ["Histogram_Equalize", "WGIF_Based_Enhance","BBHE","DSIHE","MMBEBHE","DPHE","BHE2PL"][4]
 RESTORT_COLOR = True
 
 
@@ -37,6 +40,15 @@ for pic in pic_list:
         enhanced_intensity = utils.gray_to_intensity(enhanced_gray_img)
     elif METHOD == "BHE2PL":
         enhanced_gray_img = bhe2pl.bi_histogram_equalization(gray_img)
+        enhanced_intensity = utils.gray_to_intensity(enhanced_gray_img)
+    elif METHOD == "BBHE":
+        enhanced_gray_img = BBHE.BBHE(gray_img)
+        enhanced_intensity = utils.gray_to_intensity(enhanced_gray_img)
+    elif METHOD == "DSIHE":
+        enhanced_gray_img = DSIHE.DSIHE(gray_img)
+        enhanced_intensity = utils.gray_to_intensity(enhanced_gray_img)
+    elif METHOD == "MMBEBHE":
+        enhanced_gray_img = MMBEBHE.MMBEBHE(gray_img)
         enhanced_intensity = utils.gray_to_intensity(enhanced_gray_img)
     if DRAW_3D_MAP:
         utils.draw_2_matrixs_in_one([gray_img, enhanced_gray_img])
