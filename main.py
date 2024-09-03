@@ -1,14 +1,16 @@
-import wgif
+import WGIF
 import utils
 import basic_he
 import BBHE
 import DSIHE
 import MMBEBHE
+import CLAHE
 
 DRAW_HISTOGRAM = False
 DRAW_PICS = False
 DRAW_3D_MAP = False
-METHOD = ["Histogram_Equalize", "WGIF_Based_Enhance","BBHE","DSIHE","MMBEBHE"][4]
+METHOD = ["Histogram_Equalize", "WGIF_Based_Enhance", 
+          "BBHE", "DSIHE", "MMBEBHE", "CLAHE"][1]
 RESTORT_COLOR = True
 
 
@@ -28,7 +30,7 @@ for pic in pic_list:
     gray_img = utils.RGB_to_gray(img)
     intensity = utils.RGB_to_intensity(img)
     if METHOD == "WGIF_Based_Enhance":
-        enhanced_intensity = wgif.wgif_based_enhance(intensity)
+        enhanced_intensity = WGIF.wgif_based_enhance(intensity)
         enhanced_gray_img = utils.intensity_to_gray(enhanced_intensity)
     elif METHOD == "Histogram_Equalize":
         enhanced_gray_img = basic_he.histogram_equalize(gray_img)
@@ -41,6 +43,9 @@ for pic in pic_list:
         enhanced_intensity = utils.gray_to_intensity(enhanced_gray_img)
     elif METHOD == "MMBEBHE":
         enhanced_gray_img = MMBEBHE.MMBEBHE(gray_img)
+        enhanced_intensity = utils.gray_to_intensity(enhanced_gray_img)
+    elif METHOD == "CLAHE":
+        enhanced_gray_img = CLAHE.CLAHE(gray_img, 2.0, (8, 8))
         enhanced_intensity = utils.gray_to_intensity(enhanced_gray_img)
     if DRAW_3D_MAP:
         utils.draw_2_matrixs_in_one([gray_img, enhanced_gray_img])
