@@ -46,7 +46,7 @@ def BBHE(img):
     
     #print("lower_gray: ",lower_gray)
     #print("upper_gray: ",upper_gray)
-    BBHE_img = img
+    BBHE_img = np.copy(img)
     for i in range(height):
         for j in range(width):
             if(img[i,j] > img_mean):

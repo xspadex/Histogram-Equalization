@@ -46,11 +46,11 @@ def DSIHE(img):
     
     #print("lower_gray: ",lower_gray)
     #print("upper_gray: ",upper_gray)
-    BBHE_img = img
+    DSIHE_img = np.copy(img)
     for i in range(height):
         for j in range(width):
             if(img[i,j] > img_median):
-                BBHE_img[i,j] = upper_gray[img[i,j]]
+                DSIHE_img[i,j] = upper_gray[img[i,j]]
             else:
-                BBHE_img[i,j] = lower_gray[img[i,j]]
-    return BBHE_img
+                DSIHE_img[i,j] = lower_gray[img[i,j]]
+    return DSIHE_img

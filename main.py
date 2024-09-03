@@ -1,6 +1,8 @@
 import WGIF
 import utils
 import basic_he
+import dphe
+import bhe2pl
 import BBHE
 import DSIHE
 import MMBEBHE
@@ -9,9 +11,14 @@ import CLAHE
 DRAW_HISTOGRAM = False
 DRAW_PICS = False
 DRAW_3D_MAP = False
+<<<<<<< HEAD
 METHOD = ["Histogram_Equalize", "WGIF_Based_Enhance",
           "BBHE", "DSIHE", "MMBEBHE", "DPHE", "BHE2PL", "CLAHE"][1]
 
+=======
+
+METHOD = ["Histogram_Equalize", "WGIF_Based_Enhance","BBHE","DSIHE","MMBEBHE","DPHE","BHE2PL","CLAHE"][4]
+>>>>>>> 7bb057345d53e4a2af0ae43f277ba805a90abea8
 RESTORT_COLOR = True
 
 
@@ -35,6 +42,12 @@ for pic in pic_list:
         enhanced_gray_img = utils.intensity_to_gray(enhanced_intensity)
     elif METHOD == "Histogram_Equalize":
         enhanced_gray_img = basic_he.histogram_equalize(gray_img)
+        enhanced_intensity = utils.gray_to_intensity(enhanced_gray_img)
+    elif METHOD == "DPHE":
+        enhanced_gray_img = dphe.dph_equalization(gray_img)
+        enhanced_intensity = utils.gray_to_intensity(enhanced_gray_img)
+    elif METHOD == "BHE2PL":
+        enhanced_gray_img = bhe2pl.bi_histogram_equalization(gray_img)
         enhanced_intensity = utils.gray_to_intensity(enhanced_gray_img)
     elif METHOD == "BBHE":
         enhanced_gray_img = BBHE.BBHE(gray_img)
