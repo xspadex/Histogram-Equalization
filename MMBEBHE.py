@@ -58,11 +58,11 @@ def MMBEBHE(img):
     
     #print("lower_gray: ",lower_gray)
     #print("upper_gray: ",upper_gray)
-    BBHE_img = img
+    MMBEBHE_img = np.copy(img)
     for i in range(height):
         for j in range(width):
             if(img[i,j] > img_threshold):
-                BBHE_img[i,j] = upper_gray[img[i,j]]
+                MMBEBHE_img[i,j] = upper_gray[img[i,j]]
             else:
-                BBHE_img[i,j] = lower_gray[img[i,j]]
-    return BBHE_img
+                MMBEBHE_img[i,j] = lower_gray[img[i,j]]
+    return MMBEBHE_img
