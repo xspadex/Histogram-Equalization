@@ -9,8 +9,9 @@ import CLAHE
 DRAW_HISTOGRAM = False
 DRAW_PICS = False
 DRAW_3D_MAP = False
-METHOD = ["Histogram_Equalize", "WGIF_Based_Enhance", 
-          "BBHE", "DSIHE", "MMBEBHE", "CLAHE"][1]
+METHOD = ["Histogram_Equalize", "WGIF_Based_Enhance",
+          "BBHE", "DSIHE", "MMBEBHE", "DPHE", "BHE2PL", "CLAHE"][1]
+
 RESTORT_COLOR = True
 
 
