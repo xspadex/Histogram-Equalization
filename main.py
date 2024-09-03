@@ -11,14 +11,9 @@ import CLAHE
 DRAW_HISTOGRAM = False
 DRAW_PICS = False
 DRAW_3D_MAP = False
-<<<<<<< HEAD
 METHOD = ["Histogram_Equalize", "WGIF_Based_Enhance",
           "BBHE", "DSIHE", "MMBEBHE", "DPHE", "BHE2PL", "CLAHE"][1]
 
-=======
-
-METHOD = ["Histogram_Equalize", "WGIF_Based_Enhance","BBHE","DSIHE","MMBEBHE","DPHE","BHE2PL","CLAHE"][4]
->>>>>>> 7bb057345d53e4a2af0ae43f277ba805a90abea8
 RESTORT_COLOR = True
 
 
