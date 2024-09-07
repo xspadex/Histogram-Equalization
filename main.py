@@ -7,12 +7,13 @@ import BBHE
 import DSIHE
 import MMBEBHE
 import CLAHE
+import eihe
 
 DRAW_HISTOGRAM = False
 DRAW_PICS = False
 DRAW_3D_MAP = False
 
-METHOD = ["Histogram_Equalize", "WGIF_Based_Enhance","BBHE","DSIHE","MMBEBHE","DPHE","BHE2PL","CLAHE"][4]
+METHOD = ["Histogram_Equalize", "WGIF_Based_Enhance","BBHE","DSIHE","MMBEBHE","DPHE","BHE2PL","CLAHE", "Edge_Intensity_HE"][8]
 RESTORT_COLOR = True
 
 
@@ -55,6 +56,10 @@ for pic in pic_list:
     elif METHOD == "CLAHE":
         enhanced_gray_img = CLAHE.CLAHE(gray_img, 2.0, (8, 8))
         enhanced_intensity = utils.gray_to_intensity(enhanced_gray_img)
+    elif METHOD == "Edge_Intensity_HE":
+        enhanced_rgb_img = eihe.edge_intensity_histogram_equalization(img)
+        enhanced_gray_img = utils.RGB_to_gray(enhanced_rgb_img)
+        enhanced_intensity = utils.gray_to_intensity(enhanced_gray_img)
     if DRAW_3D_MAP:
         utils.draw_2_matrixs_in_one([gray_img, enhanced_gray_img])
         
@@ -65,9 +70,13 @@ for pic in pic_list:
 
     if RESTORT_COLOR:
         enhanced_img = utils.restort_color(img, intensity, enhanced_intensity)
+        if METHOD == "Edge_Intensity_HE":
+            enhanced_img = enhanced_rgb_img
     else:
         img = gray_img
         enhanced_img = enhanced_gray_img
+        if METHOD == "Edge_Intensity_HE":
+            enhanced_img = enhanced_rgb_img
 
     if DRAW_PICS:
         utils.show_images_concat(img, enhanced_img)

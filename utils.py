@@ -88,7 +88,6 @@ def show_images_concat(img1, img2):
     cv.waitKey(0)
     cv.destroyAllWindows()
 
-
 def draw_histogram(hist, bins):
     plt.figure()
     plt.title("Histogram of Pixel Intensities")
@@ -105,8 +104,15 @@ def draw_histograms_in_one(hist1, bins1, hist2, bins2):
     plt.xlabel("Pixel Intensity")
     plt.ylabel("Frequency")
     plt.xlim([0, 256])  # 设置x轴的范围
-    plt.bar(bins1[:-1], hist1, width=1, align='edge')  # 绘制直方图1
-    plt.bar(bins2[:-1], hist2, width=1, align='edge')  # 绘制直方图2
+    # plt.bar(bins1[:-1], hist1, width=1, align='edge')  # 绘制直方图1
+    # plt.bar(bins2[:-1], hist2, width=1, align='edge')  # 绘制直方图2
+    # 绘制直方图1
+    plt.bar(bins1[:-1], hist1/hist1.sum(), width=1, align='edge', alpha=0.7, label='Original Image')
+
+    # 绘制直方图2
+    plt.bar(bins2[:-1], hist2/hist2.sum(), width=1, align='edge', alpha=0.5, label='After Histogram Equalization')
+
+    plt.legend()  # 添加图例
     plt.show()
 
 
@@ -122,3 +128,4 @@ def restort_color(img, ori, new, eps = 0.001):
 
 def write_img(path, img):
     cv.imwrite(path, img)
+    print(f"Image saved to {path}")
