@@ -13,7 +13,7 @@ DRAW_HISTOGRAM = False
 DRAW_PICS = False
 DRAW_3D_MAP = False
 
-METHOD = ["Histogram_Equalize", "WGIF_Based_Enhance","BBHE","DSIHE","MMBEBHE","DPHE","BHE2PL","CLAHE", "Edge_Intensity_HE"][8]
+METHOD = ["Histogram_Equalize", "WGIF_Based_Enhance","BBHE","DSIHE","MMBEBHE","DPHE","BHE2PL","CLAHE", "Edge_Intensity_HE"][0]
 RESTORT_COLOR = True
 
 
