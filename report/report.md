@@ -50,8 +50,8 @@ Through experiments, we found that Histogram Equalization (HE) does indeed have 
 //TODO put images and histograms here @Jiang Changjiu
 
 ## 3. Advanced Algorithms
-### 3.1 BBHE && DSIHE
-HE will significantly change the average brightness of the image, especially when the image is bright or dark. This may bring about two issues. On one hand, the image may lose characteristics since the change of saturation masks or blurs details like texture and color gradation. On the other hand, the colors of the image may be distorted, causing an unnatural effect.
+### 3.1 BBHE && DSIHE && MMBEBHE
+According to the images processed by HE algorithm, the algorithm will significantly change the average brightness of the image, especially when the image is bright or dark. This may bring about two issues. On one hand, the image may lose characteristics since the change of saturation masks or blurs details like texture and color gradation. On the other hand, the colors of the image may be distorted, causing an unnatural effect.
 
 To solve this problem, we applied brightness preserving bi-histogram equalization (BBHE) algorithm proposed by Kim. The algorithm divides the input histogram into two sub-histograms according to the average brightness of the original image, and the two sub-histograms are then histogram equalized separately. To maintain the average brightness, the equalization range is limited to the original image brightness range. We also implemented dualistic sub-image histogram equalization (DSIHE), which is also a bi-histogram base algorithm. Different from BBHE, it uses median brightness as the basis of division.
 
