@@ -137,7 +137,7 @@ The following list is in no particular order. Each section of the article was wr
 
 **Miao Kehao()** //TODO
 
-**Qiu Zhiheng()** //TODO
+**Qiu Zhiheng(G2303454H)** responsible for the theoretical analysis and implementation of the BBHE, DSIHE, and MMBEBHE algorithms, as well as part of the experimental results analysis and report writing.
 
 **Shen Tongfei()** //TODO
 
