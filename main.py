@@ -17,7 +17,6 @@ OUT_PUT_PICS = False
 METHOD = ["Histogram_Equalize", "WGIF_Based_Enhance", "BBHE", "DSIHE", "MMBEBHE", "DPHE", "BHE2PL", "CLAHE", "Edge_Intensity_HE"][0]
 RESTORE_COLOR = False
 
-
 pic_list = [
     "sample01.jpg",
     "sample02.jpeg",
