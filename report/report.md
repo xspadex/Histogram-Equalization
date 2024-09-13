@@ -12,9 +12,7 @@ To solve this problem, we introduced **Dual Sub-Image Histogram Equalization (DS
 
 Although these bi-histogram-based methods improve image quality to some extent, global equalization methods can still lead to over-enhancement in local areas, especially in regions with high contrast. To address this, we introduced **Contrast-Limited Adaptive Histogram Equalization (CLAHE)**, which processes the image in small blocks to avoid distortion caused by global equalization. CLAHE limits the histogram in each block to prevent excessive contrast enhancement, better preserving local details.
 
-Additionally, to tackle issues such as edge information loss and noise amplification, we applied **Weighted Guided Image Filtering (WGIF)**, an edge-preserving filtering technique that smooths the image while maintaining edge sharpness. WGIF introduces edge-aware weights, allowing the filter to perform better in complex regions of the image, thus enhancing detail preservation.
-
-Despite WGIF's excellent performance in detail preservation, we found that it still results in the loss of edge details in some scenarios. To further optimize image enhancement, we combined **CLAHE** with **WGIF**. First, CLAHE is applied to the reflectance component of the image to enhance edge information, followed by WGIF to maintain the image's average brightness and local details. This improved method enhances image contrast while reducing edge blurring and noise amplification issues.
+Although the aforementioned methods have tackled some of the issues with HE, there are still some problems with HE, such as amplified noise, unnatural lighting, discontinuous grayscale, etc. Therefore, we attempt to combine HE with other enhancement techniques. **Weighted Guided Image Filtering (WGIF)** is an edge-preserving filtering technique that smooths the image while maintaining edge sharpness. Based on WGIF, Mu, Q et al. proposed an enhancement method. This can greatly enhance images under low non-uniform lighting. We tried combined it with CLAHE, making it better at preserving the edge information of images.
 
 Through these improvements and integrations, we successfully overcame many limitations of traditional histogram equalization, particularly in enhancing details, preserving brightness, and suppressing noise. Ultimately, our improved method significantly enhances image quality in complex scenarios, providing more natural enhancement effects for images with varying brightness and contrast.
 
@@ -69,15 +67,18 @@ By dividing the histogram into two parts, BHE2PL allows for separate handling of
 
 
 ### 3.3 WGIF
-Based on WGIF, Mu, Q et al. proposed an enhancement method. In the proposed method, WGIF is applied to estimate the illumination component. Both the guide and input images are the intensity image $S_I$ , and the output is the estimated illumination component, denoted $S_{IL}$. The brightness of the estimated illumination component $S_{IL}$ is often very low, so the proposed method uses adaptive gamma correction and then get $S_{ILG}$: $S_{ILG}(x,y)=S_{IL}(x,y)^{\phi(x,y)}, \phi(x,y) = \frac{S_{IL}(x,y)+a}{1+a}, a=1-\frac{1}{mn}\sum_{x=1}^m\sum_{y=1}^n S_{IL}(x,y)$
 
-where $S_{ILG}(x,y)$ is the corrected illumination component, and $m$, $n$ are the height, width of the original image, respectively.
+WGIF is an enhancement of the traditional Guided Image Filter (GIF). WGIF improves edge-preserving and noise reduction by assigning weights to pixels during the filtering process, emphasizing important regions or those with higher confidence, such as areas with strong textures or sharp edges. These weights are typically based on features like color intensity, texture, or image gradients.
 
-After adaptive gamma correction, the dynamic range of the image is compressed. Thus the corrected illumination component $S_{ILG}$ is stretched linearly to obtain the result image $S_{ILGf}$ .
+Based on WGIF, Mu, Q et al. proposed an enhancement method. In the proposed method, WGIF is applied to estimate the illumination component. Both the guide and input images are the intensity image $S_I$ , and the output is the estimated illumination component, denoted $$S_{IL}$$. The brightness of $$S_{IL}$$ is often very low, so the method uses adaptive gamma correction: $$S_{ILG}(x,y)=S_{IL}(x,y)^{\phi(x,y)}, \phi(x,y) = \frac{S_{IL}(x,y)+a}{1+a}, a=1-\frac{1}{mn}\sum_{x=1}^m\sum_{y=1}^n S_{IL}(x,y)$$
+where $$S_{ILG}(x,y)$$ is the corrected illumination component, and $m$, $n$ are the height, width of the original image, respectively.
 
-The reflection component $S_{IR}$ can be obtained from: $S_{IR}(x,y)=S_{I}(x,y)/S_{IL}(x,y)$.
+After adaptive gamma correction, the dynamic range of the image is compressed. Thus the corrected illumination component $$S_{ILG}$$ is stretched linearly to obtain the result image $$S_{ILGf}$$.
 
-Since noise mainly exists in the reflection component, $S_{IR}$ is then processed by WGIF, giving the denoised reflection component $S_{IRH}$. Then, the processed illumination component $S_{ILGf}$ is multiplied by the denoised reflection component $S_{IRH}$ to give the fused intensity image $S_{IE}$. Finally, the S-hyperbolic tangent function is used to improve the brightness of the fused image $S+{IE}$, and the enhanced intensity image $S_{IEf}$ is obtained: $S_{IEf}(x,y)=\frac{1}{1+\exp{(-8(S_{IE}-b))}}, b=\frac{1}{mn}\sum_{x=1}^{m}\sum_{y=1}^{n}S_{IE}(x,y)$, where b is the mean intensity of $S_{IE}$, and $m$, $n$ are the height and width of $S_{IE}$, respectively.
+The reflection component $$S_{IR}$$ can be obtained from: $$S_{IR}(x,y)=S_{I}(x,y)/S_{IL}(x,y)$$.
+Since noise mainly exists in the reflection component, $$S_{IR}$$ is then processed by WGIF, giving the denoised reflection component $$S_{IRH}$$. Then, the processed illumination component $$S_{ILGf}$$ is multiplied by the denoised reflection component $$S_{IRH}$$ to give the fused intensity image $$S_{IE}$$. Finally, the S-hyperbolic tangent function is used to improve the brightness of the fused image: $$S_{IEf}(x,y)=\frac{1}{1+\exp{(-8(S_{IE}-b))}}, b=\frac{1}{mn}\sum_{x=1}^{m}\sum_{y=1}^{n}S_{IE}(x,y)$$, where b is the mean intensity of $$S_{IE}$$.
+
+Here we combined CLAHE with the above method, where we used CLAHE to process $S_{IR}$ to make its edge information clearer, and added a bias to make the average intensity before and after the processing the same. Then we performed the same processing on the modified $$S_{IR}$$. Our method retains the edge details of the image better than the original one.
 
 ### 3.4 EIHE
 To address the drawbacks of HE (Histogram Equalization) in losing edge details near boundaries and amplifying noise, we adopted an approach that uses an edge intensity histogram instead of a simple brightness histogram, as proposed in [1], to enhance the contrast of the image.
@@ -135,7 +136,7 @@ The following list is in no particular order. Each section of the article was wr
 
 **Jiang Changjiu(G2402840A)** served as group leader, coordinating the team's efforts to ensure the project progressed on schedule. He was also responsible for the implementation of the original HE algorithm, the implementation of visualization tools, and managed the overall structure and formatting of the report.
 
-**Miao Kehao()** //TODO
+**Miao Kehao(G2403243E)** implemented WGIF and CLAHE algorithm, reproduced the paper "Low and non-uniform illumination color image enhancement using weighted guided image filtering", combined it with CLAHE to improve the method.
 
 **Qiu Zhiheng()** //TODO
 
