@@ -9,12 +9,13 @@ import MMBEBHE
 import CLAHE
 import eihe
 
-DRAW_HISTOGRAM = False
+DRAW_HISTOGRAM = True
 DRAW_PICS = False
 DRAW_3D_MAP = False
+OUT_PUT_PICS = False
 
-METHOD = ["Histogram_Equalize", "WGIF_Based_Enhance","BBHE","DSIHE","MMBEBHE","DPHE","BHE2PL","CLAHE", "Edge_Intensity_HE"][0]
-RESTORT_COLOR = True
+METHOD = ["Histogram_Equalize", "WGIF_Based_Enhance", "BBHE", "DSIHE", "MMBEBHE", "DPHE", "BHE2PL", "CLAHE", "Edge_Intensity_HE"][0]
+RESTORE_COLOR = False
 
 
 pic_list = [
@@ -68,7 +69,7 @@ for pic in pic_list:
         new_hist, new_bins = basic_he.get_histogram(enhanced_gray_img)
         utils.draw_histograms_in_one(hist, bins, new_hist, new_bins)
 
-    if RESTORT_COLOR:
+    if RESTORE_COLOR:
         enhanced_img = utils.restort_color(img, intensity, enhanced_intensity)
         if METHOD == "Edge_Intensity_HE":
             enhanced_img = enhanced_rgb_img
@@ -80,5 +81,6 @@ for pic in pic_list:
 
     if DRAW_PICS:
         utils.show_images_concat(img, enhanced_img)
-    
-    utils.write_img("results/" + pic.replace(".jpeg", ".jpg"), enhanced_img)
+
+    if OUT_PUT_PICS:
+        utils.write_img("results/" + pic.replace(".jpeg", ".jpg"), enhanced_img)
