@@ -115,7 +115,6 @@ def draw_histograms_in_one(hist1, bins1, hist2, bins2):
     plt.legend()  # 添加图例
     plt.show()
 
-
 def restort_color(img, ori, new, eps = 0.001):
     rows, columns = ori.shape
     bgr = np.int32(img)

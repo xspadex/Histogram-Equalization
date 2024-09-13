@@ -57,11 +57,13 @@ To solve this problem, we considered adopting a series of bi-histogram based alg
 
 According to the image processing results, the processing effects of BBHE and DSIHE on images with high and low mean brightness are still not ideal. Then we apply minimum mean brightness error bi-histogram equalization (MMBEBHE) algorithm. This algorithm traverses all possible brightness values and gets the sub-histogram through minimum absolute mean brightness error (MABE). Consequently, the algorithm properly enhances the images.
 
-### 3.2 DPHE && BHE2PL
+### 3.2 DPHE
 
 Double Plateaus Histogram Equalization (DPHE) is an advanced image enhancement algorithm that improves upon traditional Histogram Equalization by addressing the issue of over-enhancement and noise amplification commonly found in HE. The DPHE algorithm divides the original image's histogram into two parts, setting two distinct plateau thresholds to control the stretching of pixel intensities. This dual-limiting mechanism ensures that extreme intensity values are capped, thus reducing the amplification of noise and preserving more natural image details.
 
 By setting plateau limits, DPHE prevents the excessive stretching of high-intensity regions, which is a common issue in traditional HE. DPHE maintains more subtle image features and textures, provides better control over the contrast enhancement, resulting in more visually appealing images, especially in scenarios with complex lighting conditions.
+
+### 3.3 BHE2PL
 
 Bi-Histogram Equalization with Dual Plateau Limits (BHE2PL) is an advanced histogram equalization algorithm designed to improve contrast enhancement by splitting the image's histogram into two sub-histograms and applying independent dual plateau limits (thresholds) to each. This method helps control contrast enhancement more effectively and prevents over-enhancement and noise amplification, which are common issues in traditional Histogram Equalization.
 
