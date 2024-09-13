@@ -109,7 +109,6 @@ def draw_histograms_in_one(hist1, bins1, hist2, bins2):
     plt.bar(bins2[:-1], hist2, width=1, align='edge')  # 绘制直方图2
     plt.show()
 
-
 def restort_color(img, ori, new, eps = 0.001):
     rows, columns = ori.shape
     bgr = np.int32(img)
