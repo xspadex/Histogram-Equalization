@@ -1,7 +1,7 @@
 # Revamping Images: Advanced Histogram Equalization Techniques
 
 ## Abstract
-Histogram Equalization (HE) is a commonly used technique for image enhancement that improves contrast by adjusting the grayscale distribution of an image, making details in low-contrast images clearer. However, while enhancing contrast, the HE algorithm may also introduce issues such as noise, color distortion, and excessive brightness enhancement. To address these shortcomings, this study explores several optimization methods based on the HE algorithm, including Bi-Histogram Equalization (BBHE), Dynamic Bi-Histogram Equalization (DSIHE), Weighted Guided Image Filtering (WGIF), and Entropy-based Weighted Histogram Equalization (EIHE). Through experiments, we performed both quantitative and qualitative analyses of the effects of different optimization methods, aiming to improve image contrast and detail clarity while preserving original color information and reducing noise and other distortions. The experimental results demonstrate that each optimization method achieves significant improvements in different scenarios, with WGIF and EIHE showing excellent performance in retaining image features and reducing noise. All relevant code can be found in the repository: https://github.com/xspadex/Histogram-Equalization.git. The contributions of each group member can be found at the end of the article in 6. Contribution Statement.
+Histogram Equalization (HE) is a commonly used technique for image enhancement that improves contrast by adjusting the grayscale distribution of an image, making details in low-contrast images clearer. However, while enhancing contrast, the HE algorithm may also introduce issues such as noise, color distortion, and excessive brightness enhancement. To address these shortcomings, this study explores several optimization methods based on the HE algorithm, including Bi-Histogram Equalization (BBHE), Dynamic Bi-Histogram Equalization (DSIHE), Weighted Guided Image Filtering (WGIF), and Edge Intensity Histogram Equalization (EIHE). Through experiments, we performed both quantitative and qualitative analyses of the effects of different optimization methods, aiming to improve image contrast and detail clarity while preserving original color information and reducing noise and other distortions. The experimental results demonstrate that each optimization method achieves significant improvements in different scenarios, with WGIF and EIHE showing excellent performance in retaining image features and reducing noise. All relevant code can be found in the repository: https://github.com/xspadex/Histogram-Equalization.git. The contributions of each group member can be found at the end of the article in 6. Contribution Statement.
 
 ## 1. Introduction
 Image enhancement techniques play a crucial role in computer vision and digital image processing. **Histogram Equalization (HE)** is a classical method for enhancing image contrast and improving overall visual quality. However, HE often causes significant changes in the mean brightness, especially when dealing with very bright or very dark images, which may result in the loss of image features and color distortion. To address these issues, we adopted several improved algorithms to optimize the results by limiting brightness changes, preserving local details, and controlling contrast enhancement.
@@ -83,7 +83,7 @@ Since noise mainly exists in the reflection component, $$S_{IR}$$ is then proces
 Here we combined CLAHE with the above method, where we used CLAHE to process $S_{IR}$ to make its edge information clearer, and added a bias to make the average intensity before and after the processing the same. Then we performed the same processing on the modified $$S_{IR}$$. Our method retains the edge details of the image better than the original one.
 
 ### 3.4 EIHE
-To address the drawbacks of HE (Histogram Equalization) in losing edge details near boundaries and amplifying noise, we adopted an approach that uses an edge intensity histogram instead of a simple brightness histogram, as proposed in [1], to enhance the contrast of the image.
+To address the drawbacks of HE (Histogram Equalization) in losing edge details near boundaries and amplifying noise, we adopted an approach that uses an edge intensity histogram instead of a simple brightness histogram, as proposed in \cite{kim2023improved}, to enhance the contrast of the image.
 
 Traditional HE uses luminance histograms, which represent the number of pixels at each brightness level (0-255) without considering the spatial relationships or local features of the pixels. For each brightness level m, E(m) denotes the number of pixels with brightness m, implying that each pixel contributes equally to the histogram. However, the edge intensity histogram represents the overall brightness difference between each pixel and its eight neighboring pixels at each brightness level. The calculation process is as follows:
 $$
@@ -98,39 +98,26 @@ To address the potential issue of noise amplification in the aforementioned meth
 During the process of processing sample images, we found that this method did not produce satisfactory results for overly bright or dark images. Therefore, we introduced a parameter alpha when calculating the transformation function for edge intensity. After obtaining the CDF function F, we apply `F_power = F ** alpha`. When alpha < 1, it enhances the contrast in dark regions, and when alpha > 1, it enhances the contrast in bright regions. Additionally, by calculating the average brightness value of the image, we determine whether the current image is too bright or too dark, and assign corresponding values to alpha for processing. This approach results in better processing effects for both bright and dark images.
 
 ## 4. Experiment
-### 4.1 定量分析
-提供实验的数值结果，展示不同方法在对比度、亮度分布、颜色保真度等方面的表现。通过表格或图示展示不同算法的对比效果。
 
-### 4.2 定性分析
-基于视觉观察评价各算法在实际场景中的表现，探讨不同方法在处理图像细节、颜色保留和噪声抑制时的优缺点。
+### 4.1 Introduction
 
-### 4.3 Discussion
-讨论实验结果背后的原因，分析各优化方法在不同应用场景中的适用性，并指出现有方法的局限性。
+In this experiment, we applied nine different contrast enhancement methods to test images, including basic Histogram Equalization (HE), Weighted Guided Image Filtering (WGIF), Brightness Preserving Bi-Histogram Equalization (BBHE), Dual Sub-Image Histogram Equalization (DSIHE), Minimum Mean Brightness Error Bi-Histogram Equalization (MMBEBHE), Double Plateaus Histogram Equalization (DPHE), Bi-Histogram Equalization with Dual Plateau Limits(BHE2PL), Contrast Limited Adaptive Histogram Equalization (CLAHE), and Edge Intensity Histogram Equalization (EIHE).
+
+Among the eight test images, the first four images have an uneven distribution of pixel intensities, with grayscale values concentrated in the higher range, while there are few or no pixels in the lower grayscale range. This distribution of pixels results in poor contrast between light and dark areas, making the images appear very bright or even washed out overall, with many details "compressed" in the bright areas and difficult to discern. In the latter four images, the pixel grayscale values are concentrated in the lower range, causing the images to appear very dark overall, with much of the image information obscured in the dark areas and difficult to see clearly.
+
+### 4.2 Qualitative evaluation
+To comprehensively evaluate the effectiveness of each method, we selected one bright image and one dark image as representatives to analyze the enhancement results.  
+
+For the cat image shown in Figure \ref{Img: Image02}a(Sample02), the colors are relatively light and the contrast is low. From its brightness histogram, Figure \ref{His: Histogram02}a, it can be seen that the grayscale values are concentrated in the higher range, making the image appear overly bright with a loss of details. The visual effect is poor, requiring an overall enhancement of contrast and edge details. These enhancement methods generally lowered the image brightness, and improved the image contrast and clarity, making contours and details more prominent. 
+
+Visually, HE significantly increased contrast but severely distorted colors and amplified noise. WGIF achieved a more uniform brightness distribution but lost some original color information. MMBEBHE and DPHE also have issues with the loss of original color information. BBHE, DSIHE, and BHE2PL retained some of the original tones, but details in the brightest areas were still lost. EIHE preserved most of the original features but generated more noise, making the image look unnatural. CLAHE produced a relatively good effect in this image, enhancing image details and contrast while preserving the natural appearance and color information of the original image.
+
+
+
+For the indoor scene shown in Figure \ref{Img: Image07}(Sample07)a, the original image appears generally dark, with details obscured in shadows. Its brightness histogram, Figure \ref{His: Histogram07}a, shows that the grayscale values are concentrated in the low range, resulting in low contrast with much information hidden in dark areas. All methods improved the brightness in dark places to varying degrees, making details in shadow areas more visible. For the basic HE method, which amplifies noise and causes overexposure in some areas (such as the window) due to excessive enhancement, other optimization methods also show various improvements. However, issues like loss of original colors and insufficient brightness enhancement still exist in methods like BBHE, DSIHE, and BHE2PL. The best visual results are achieved by WGIF and EIHE, which make the brightness distribution more uniform while retaining some original features.
 
 ## 5. Conclusion
-For the cat image shown in Figure 3a, the colors are relatively light and the contrast
-is low. From its brightness histogram, Figure 4a, it can be seen that the grayscale values
-are concentrated in the higher range, making the image appear overly bright with a loss
-of details. The visual effect is poor, requiring an overall enhancement of contrast and
-edge details. These enhancement methods generally lowered the image brightness, and
-improved the image contrast and clarity, making contours and details more prominent.
-Visually, HE significantly increased contrast but severely distorted colors and amplified noise. WGIF achieved a more uniform brightness distribution but lost some original
-color information. MMBEBHE and DPHE also have issues with the loss of original color
-information. BBHE, DSIHE, and BHE2PL retained some of the original tones, but details in the brightest areas were still lost. EIHE preserved most of the original features
-but generated more noise, making the image look unnatural. CLAHE produced a relatively good effect in this image, enhancing image details and contrast while preserving
-the natural appearance and color information of the original image.
 
-For the indoor scene shown in Figure 13a, the original image appears generally dark,
-with details obscured in shadows. Its brightness histogram, Figure 14a, shows that the
-grayscale values are concentrated in the low range, resulting in low contrast with much
-information hidden in dark areas. All methods improved the brightness in dark places to
-varying degrees, making details in shadow areas more visible. For the basic HE method,
-which amplifies noise and causes overexposure in some areas (such as the window) due
-to excessive enhancement, other optimization methods also show various improvements.
-However, issues like loss of original colors and insufficient brightness enhancement still
-exist in methods like BBHE, DSIHE, and BHE2PL. The best visual results are achieved
-by WGIF and EIHE, which make the brightness distribution more uniform while retaining
-some original features.
 
 ## 6. Contribution Statement
 
@@ -142,7 +129,7 @@ The following list is in no particular order. Each section of the article was wr
 
 **Qiu Zhiheng(G2303454H)** responsible for the theoretical analysis and implementation of the BBHE, DSIHE, and MMBEBHE algorithms, as well as part of the experimental results analysis and report writing.
 
-**Shen Tongfei()** //TODO
+**Shen Tongfei(G2404172C)** Responsible for analyzing and implementing the optimization method based on edge intensity, completing the corresponding section of the report, and analyzing the overall optimization effects.
 
 **Zuo Yuqi()** //TODO
 
@@ -151,7 +138,7 @@ Li, Z., Zheng, J., Zhu, Z., Yao, W., & Wu, S. (2014). Weighted guided image filt
 
 Mu, Q., Wang, X., Wei, Y., & Li, Z. (2021). Low and non-uniform illumination color image enhancement using weighted guided image filtering. *Computational Visual Media*, *7*, 529-546.
 
-Kim, T. S., & Kim, S. H. (2023). An improved contrast enhancement for dark images with non-uniform illumination based on edge preservation. *Multimedia Systems*, *29*(3), 1117-1130. [1]
+Kim, T. S., & Kim, S. H. (2023). An improved contrast enhancement for dark images with non-uniform illumination based on edge preservation. *Multimedia Systems*, *29*(3), 1117-1130. 
 
 Aquino-Morínigo P B, Lugo-Solís F R, Pinto-Roa D P, et al. Bi-histogram equalization using two plateau limits[J]. Signal, Image and Video Processing, 2017, 11: 857-864.
 
